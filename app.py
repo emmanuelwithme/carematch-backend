@@ -5,6 +5,8 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from config import Config
 import bcrypt
 import requests
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 CORS(app)
@@ -31,8 +33,8 @@ with app.app_context():
     try:
         db.create_all()
     except Exception as e:
-        print("❗資料庫初始建立tables失敗：", e)
-        print(f"請檢察azure postgresql flexible server是否已經啟動，並且資料庫是否已經建立，且防火牆設定此IP: {show_ip()} 可以連線")
+        logging.error("❗資料庫初始建立tables失敗：", e)
+        logging.debug(f"請檢察azure postgresql flexible server是否已經啟動，並且資料庫是否已經建立，且防火牆設定此IP: {show_ip()} 可以連線")
 
 @app.route('/api')
 def index():
