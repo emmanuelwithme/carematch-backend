@@ -16,7 +16,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
-@app.route("/my-ip")
+@app.route("/api/my-ip")
 def show_ip():
     return requests.get('https://api.ipify.org').text
 
