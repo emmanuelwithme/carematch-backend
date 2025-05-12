@@ -36,7 +36,9 @@ pip install -r requirements.txt # 按照我的套件表安裝所有套件到venv
 要寫Procfile才能佈署在雲端，位於 `.\backend\Procfile`。
 - `web:`代表告訴 Azure 或 Heroku 這是一個 Web 應用，會使用該行啟動。
 - `gunicorn`是 Python WSGI server，用來在生產(Production)環境跑 Flask 應用，不會執行`app.py`裡面的`if __name__ == '__main__':`。
+- `--bind`是指伺服器要綁定在哪個 IP 和 port 上運作，0.0.0.0 意思是「接受所有來源來的連線」。如果設成 127.0.0.1，就只有自己機器可以連，不會對外開放。
+- `--timeout`是指設定「每個請求最多能執行幾秒」，超過就中斷。通常30～60 秒。
 - `app:app`第一個`app`是`app.py`檔名（不含副檔名），第二個`app`是 Flask 物件名稱，要跟`app.py`裡面的`app = Flask(__name__)`變數名稱一樣。
 ```Procfile
-web: gunicorn app:app
+web: gunicorn --bind=0.0.0.0 --timeout 30 app:app
 ```
