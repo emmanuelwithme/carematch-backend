@@ -14,6 +14,10 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
+@app.route("/my-ip")
+def show_ip():
+    return requests.get('https://api.ipify.org').text
+
 # 用戶模型
 class User(db.Model):
     __tablename__ = 'users'
@@ -24,16 +28,15 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False)  # 'caregiver' 或 'client'
 
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except Exception as e:
+        print("❗資料庫初始建立tables失敗：", e)
+        print(f"請檢察azure postgresql flexible server是否已經啟動，並且資料庫是否已經建立，且防火牆設定此IP: {show_ip()} 可以連線")
 
 @app.route('/api')
 def index():
     return jsonify({'message': 'Hello, World!'}), 200
-
-@app.route("/my-ip")
-def show_ip():
-    ip = requests.get('https://api.ipify.org').text
-    return f"My outbound IP is: {ip}"
 
 # 註冊
 @app.route('/api/register', methods=['POST'])
