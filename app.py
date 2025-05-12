@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from config import Config
 import bcrypt
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -28,6 +29,11 @@ with app.app_context():
 @app.route('/api')
 def index():
     return jsonify({'message': 'Hello, World!'}), 200
+
+@app.route("/my-ip")
+def show_ip():
+    ip = requests.get('https://api.ipify.org').text
+    return f"My outbound IP is: {ip}"
 
 # 註冊
 @app.route('/api/register', methods=['POST'])
